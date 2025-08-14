@@ -18,7 +18,7 @@ async function bootstrap() {
   app.setGlobalPrefix(prefix);
   app.enableShutdownHooks();
   app.use(
-    morgan(":method :url :status - :res[content-length] b - :response-time ms")
+    morgan(':method :url :status - :res[content-length] b - :response-time ms')
   );
 
   const config = new DocumentBuilder()

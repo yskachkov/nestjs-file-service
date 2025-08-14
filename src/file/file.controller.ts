@@ -22,7 +22,13 @@ export class FileController {
 
   @Get('/download/:id')
   async downloadFile(@Param('id') id: string): Promise<StreamableFile> {
-    return this.fileService.downloadFile(id);
+    const { readStream, filename } =
+      await this.fileService.createFileDownloadData(id);
+
+    return new StreamableFile(readStream, {
+      type: 'application/octet-stream',
+      disposition: `attachment; filename="downloaded-file"; filename*=UTF-8''${encodeURIComponent(filename)}`
+    });
   }
 
   @Post('/upload')

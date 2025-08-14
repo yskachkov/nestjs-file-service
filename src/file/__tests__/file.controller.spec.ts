@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { FileController } from '../file.controller';
 import { FileService } from '../file.service';
 import { Logger } from '@nestjs/common';
+import { FileRepository } from '../file.repository';
 
 describe('FileController', () => {
   let controller: FileController;
@@ -11,7 +12,7 @@ describe('FileController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [FileController],
-      providers: [JwtService, FileService, Logger]
+      providers: [FileService, FileRepository, JwtService, Logger]
     }).compile();
 
     controller = module.get<FileController>(FileController);

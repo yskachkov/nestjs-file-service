@@ -19,7 +19,7 @@ export class HealthController {
 
   @Get('/check')
   async healthCheck(): Promise<{ status: string }> {
-    return {status: 'ok'};
+    return { status: 'ok' };
   }
 
   @Get()
@@ -31,7 +31,11 @@ export class HealthController {
 
     return this.health.check([
       () => this.http.pingCheck('google', 'https://google.com'),
-      () => this.http.pingCheck('service connection', `http://${host}:${port}/api/${apiVersion}/health/check`),
+      () =>
+        this.http.pingCheck(
+          'service connection',
+          `http://${host}:${port}/api/${apiVersion}/health/check`
+        ),
       () =>
         this.disk.checkStorage('storage', {
           path: '/',
