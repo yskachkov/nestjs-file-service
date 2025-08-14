@@ -1,7 +1,9 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
+  OnApplicationShutdown,
   StreamableFile
 } from '@nestjs/common';
 import { createReadStream, promises as fsPromises } from 'fs';
@@ -11,12 +13,16 @@ import { v4 as uuid } from 'uuid';
 import { StoredFile } from './types';
 
 @Injectable()
-export class FileService {
+export class FileService implements OnApplicationShutdown {
   private readonly storageDir = join(process.cwd(), 'src/file/storage');
   private readonly files: Map<string, StoredFile> = new Map();
 
-  constructor() {
+  constructor(private readonly logger: Logger) {
     fsPromises.mkdir(this.storageDir, { recursive: true });
+  }
+
+  async onApplicationShutdown() {
+    await this.cleanupUploadedFiles();
   }
 
   async downloadFile(fileId: string): Promise<StreamableFile> {
@@ -56,5 +62,20 @@ export class FileService {
     this.files.set(fileId, fileData);
 
     return fileData;
+  }
+
+  async cleanupUploadedFiles() {
+    try {
+      const files = await fsPromises.readdir(this.storageDir);
+
+      for (const file of files) {
+        const filePath = join(this.storageDir, file);
+        await fsPromises.unlink(filePath);
+      }
+
+      this.logger.log('Uploaded files cleaned up.');
+    } catch (err) {
+      this.logger.error(`Error cleaning uploaded files: ${err}`);
+    }
   }
 }

@@ -15,6 +15,7 @@ async function bootstrap() {
   const prefix = `/api/${apiVersion}`;
 
   app.setGlobalPrefix(prefix);
+  app.enableShutdownHooks();
 
   const config = new DocumentBuilder()
     .setTitle('File Service')
