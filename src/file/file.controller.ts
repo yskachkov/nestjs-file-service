@@ -5,11 +5,13 @@ import {
   Post,
   StreamableFile,
   UploadedFile,
+  UseGuards,
   UseInterceptors
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
-
 import { FileInterceptor } from '@nestjs/platform-express';
+
+import {AuthGuard} from "../auth/auth.guard";
 import { FileService } from './file.service';
 import { StoredFile } from './types';
 
@@ -25,6 +27,7 @@ export class FileController {
 
   @Post('/upload')
   @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
   @ApiBody({

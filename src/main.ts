@@ -21,6 +21,7 @@ async function bootstrap() {
     .setDescription('File service with upload/download APIs and local storage.')
     .setVersion(apiVersion)
     .addServer(prefix)
+    .addBearerAuth()
     .build();
   const documentFactory = () =>
     SwaggerModule.createDocument(app, config, { ignoreGlobalPrefix: true });
