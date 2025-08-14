@@ -1,3 +1,7 @@
+## Description
+
+File service that written on NestJS created using [Nest CLI](https://github.com/nestjs/nest).
+
 ## Project setup
 
 ```bash
