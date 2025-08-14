@@ -1,8 +1,9 @@
 import { NestFactory } from '@nestjs/core';
-
-import { AppModule } from './app/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from '@nestjs/common';
+import morgan from 'morgan';
+
+import { AppModule } from './app/app.module';
 
 async function bootstrap() {
   const host = process.env.HOST ?? 'localhost';
@@ -16,6 +17,9 @@ async function bootstrap() {
 
   app.setGlobalPrefix(prefix);
   app.enableShutdownHooks();
+  app.use(
+    morgan(":method :url :status - :res[content-length] b - :response-time ms")
+  );
 
   const config = new DocumentBuilder()
     .setTitle('File Service')

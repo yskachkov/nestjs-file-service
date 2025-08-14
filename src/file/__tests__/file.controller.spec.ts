@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {JwtService} from "@nestjs/jwt";
+import { JwtService } from '@nestjs/jwt';
 
-import {FileController} from "../file.controller";
-import {FileService} from "../file.service";
-import {Logger} from "@nestjs/common";
+import { FileController } from '../file.controller';
+import { FileService } from '../file.service';
+import { Logger } from '@nestjs/common';
 
 describe('FileController', () => {
   let controller: FileController;

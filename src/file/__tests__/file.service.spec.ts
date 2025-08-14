@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {Logger} from "@nestjs/common";
+import { Logger } from '@nestjs/common';
 
 import { FileService } from '../file.service';
 
