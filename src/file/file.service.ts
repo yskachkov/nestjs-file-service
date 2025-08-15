@@ -1,37 +1,28 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException
-} from '@nestjs/common';
-import { createReadStream } from 'fs';
+import { Injectable } from '@nestjs/common';
+import { v4 as uuid } from 'uuid';
 
-import { FileDownloadData, StoredFile } from './types';
-import { FileRepository } from './file.repository';
+import { LocalFileSystem } from './local-file-system';
+import { FileData, FileReadStreamWithMetadata } from './types';
 
 @Injectable()
 export class FileService {
-  constructor(private readonly fileRepository: FileRepository) {}
+  constructor(private readonly localFileSystem: LocalFileSystem) {}
 
-  async createFileDownloadData(fileId: string): Promise<FileDownloadData> {
-    const file = await this.fileRepository.getFileMetadata(fileId);
-
-    if (!file) {
-      throw new NotFoundException('File not found.');
-    }
-
-    const { filename, path } = file;
-
-    return {
-      filename,
-      readStream: createReadStream(path)
-    };
+  async getReadStreamWithMetadata(
+    fileId: string
+  ): Promise<FileReadStreamWithMetadata> {
+    return this.localFileSystem.getReadStreamWithMetadata(fileId);
   }
 
-  async uploadFile(file: Express.Multer.File): Promise<StoredFile> {
-    if (!file) {
-      throw new BadRequestException('File is not provided.');
-    }
+  async saveFile(filename: string, buffer: Buffer): Promise<FileData> {
+    const fileId = uuid();
 
-    return this.fileRepository.saveFile(file);
+    await this.localFileSystem.save({
+      id: fileId,
+      filename,
+      buffer
+    });
+
+    return { id: fileId };
   }
 }

@@ -13,7 +13,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 import { AuthGuard } from '../auth/auth.guard';
 import { FileService } from './file.service';
-import { StoredFile } from './types';
+import { FileData } from './types';
 
 @Controller('file')
 @ApiTags('file')
@@ -22,8 +22,8 @@ export class FileController {
 
   @Get('/download/:id')
   async downloadFile(@Param('id') id: string): Promise<StreamableFile> {
-    const { readStream, filename } =
-      await this.fileService.createFileDownloadData(id);
+    const { filename, readStream } =
+      await this.fileService.getReadStreamWithMetadata(id);
 
     return new StreamableFile(readStream, {
       type: 'application/octet-stream',
@@ -48,8 +48,8 @@ export class FileController {
     }
   })
   async uploadFile(
-    @UploadedFile() file: Express.Multer.File
-  ): Promise<StoredFile> {
-    return this.fileService.uploadFile(file);
+    @UploadedFile() { originalname: filename, buffer }: Express.Multer.File
+  ): Promise<FileData> {
+    return this.fileService.saveFile(filename, buffer);
   }
 }

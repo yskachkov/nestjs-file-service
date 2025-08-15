@@ -2,14 +2,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Logger } from '@nestjs/common';
 
 import { FileService } from '../file.service';
-import { FileRepository } from '../file.repository';
+import { LocalFileSystem } from '../local-file-system';
 
 describe('FileService', () => {
   let service: FileService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [FileService, FileRepository, Logger]
+      providers: [FileService, LocalFileSystem, Logger]
     }).compile();
 
     service = module.get<FileService>(FileService);

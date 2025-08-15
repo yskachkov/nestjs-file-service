@@ -1,13 +1,13 @@
 import { Logger, Module } from '@nestjs/common';
 import { FileService } from './file.service';
 import { FileController } from './file.controller';
-import { FileRepository } from './file.repository';
+import { LocalFileSystem } from './local-file-system';
 
 @Module({
   controllers: [FileController],
   providers: [
     FileService,
-    FileRepository,
+    LocalFileSystem,
     {
       provide: Logger,
       useValue: new Logger(FileService.name, { timestamp: true })
